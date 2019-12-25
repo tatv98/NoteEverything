@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+    <!-- The ActionBar displayed at the top -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="50dp">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_diary"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Note Everything"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="#118016"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="REGISTER"
+        android:textColor="#FF5722"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:gravity="center"
+        />
+    <EditText
+
+        android:id="@+id/edtEmail"
+        android:hint="Email"
+        android:singleLine="true"
+        android:padding="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:inputType="text"
+        android:background="@drawable/login_custom_edittext"
+        />
+    <EditText
+        android:id="@+id/edtUser"
+        android:hint="Username"
+        android:singleLine="true"
+        android:padding="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:inputType="text"
+        android:background="@drawable/login_custom_edittext"
+        />
+    <EditText
+        android:id="@+id/edtPass"
+        android:hint="Password"
+        android:singleLine="true"
+        android:padding="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:inputType="textPassword"
+        android:background="@drawable/login_custom_edittext"
+        />
+    <EditText
+        android:id="@+id/edtConfirmPass"
+        android:hint="Confirm Password"
+        android:singleLine="true"
+        android:padding="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:inputType="textPassword"
+        android:background="@drawable/login_custom_edittext"
+        />
+
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:background="@drawable/login_custom_button"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:text="Register"
+        />
+    <TextView
+        android:id="@+id/tvBackToLogin"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="#FF5722"
+        android:text="Back to login"
+        />
+
+</LinearLayout>
