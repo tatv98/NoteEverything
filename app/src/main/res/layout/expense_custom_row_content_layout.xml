@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="12dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_margin="1dp"
+        app:cardElevation="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/vgForeground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="#8394B995"
+            android:foreground="?android:attr/selectableItemBackground">
+            <ImageView
+                android:id="@+id/ivThumbnail"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_expense"
+                />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/gvHear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_toRightOf="@+id/ivThumbnail"
+                >
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:textColor="#673AB7"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingConstraints"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    />
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:textColor="#FF9800"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingConstraints"
+                    android:gravity="bottom"
+                    android:paddingTop="7dp"
+                    android:textStyle="italic"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/vLine"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginRight="20dp"/>
+                <View
+                    android:id="@+id/vLine"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.8dp"
+                    android:layout_marginRight="5dp"
+                    android:background="#5F5E5E"
+                    tools:ignore="MissingConstraints" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/tvContent"
+                android:layout_below="@+id/gvHear"
+                android:layout_toRightOf="@+id/ivThumbnail"
+                android:layout_marginTop="2dp"
+                android:textColor="#242222"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

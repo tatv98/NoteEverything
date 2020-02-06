@@ -20,21 +20,27 @@ public class Note {
     @SerializedName("note_date")
     @Expose
     private String noteDate;
+    @SerializedName("note_position")
+    @Expose
+    private Integer notePosition;
 
-    public Note(String noteTitle, String noteContent, String userName, String noteDate) {
+    public Note(String noteTitle, String noteContent, String userName, String noteDate, Integer notePosition) {
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
         this.userName = userName;
         this.noteDate = noteDate;
+        this.notePosition = notePosition;
     }
 
-    public Note(Integer noteId, String noteTitle, String noteContent, String userName, String noteDate) {
+    public Note(Integer noteId, String noteTitle, String noteContent, String userName, String noteDate, Integer notePosition) {
         this.noteId = noteId;
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
         this.userName = userName;
         this.noteDate = noteDate;
+        this.notePosition = notePosition;
     }
+
 
     public Integer getNoteId() {
         return noteId;
@@ -75,6 +81,13 @@ public class Note {
     public void setNoteDate(String noteDate) {
         this.noteDate = noteDate;
     }
+    public Integer getNotePosition() {
+        return notePosition;
+    }
+
+    public void setNotePosition(Integer notePosition) {
+        this.notePosition = notePosition;
+    }
 
     @Override
     public String toString() {
@@ -84,6 +97,7 @@ public class Note {
                 ", noteContent='" + noteContent + '\'' +
                 ", userName='" + userName + '\'' +
                 ", noteDate='" + noteDate + '\'' +
+                ", notePosition=" + notePosition +
                 '}';
     }
 }

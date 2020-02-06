@@ -18,6 +18,12 @@ public class User {
     @Expose
     private String userEmail;
 
+    public User(String userName, String userPass, String userEmail) {
+        this.userName = userName;
+        this.userPass = userPass;
+        this.userEmail = userEmail;
+    }
+
     public String getUserName() {
         return userName;
     }

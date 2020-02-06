@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,12 +20,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import nuce.tatv.noteeverything.Activities.AddNoteActivity;
 import nuce.tatv.noteeverything.Activities.MainActivity;
@@ -38,15 +42,18 @@ import nuce.tatv.noteeverything.Models.Response;
 import nuce.tatv.noteeverything.R;
 import nuce.tatv.noteeverything.Remotes.GetDataService;
 import nuce.tatv.noteeverything.Remotes.RetrofitClientInstance;
+import nuce.tatv.noteeverything.Utils.DateFormat;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class NoteFragment extends Fragment implements RecyclerItemTouchHelperListener {
+public class NoteFragment extends Fragment implements RecyclerItemTouchHelperListener, SwipeRefreshLayout.OnRefreshListener {
     public static final int REQUEST_CODE_ADD = 111;
     public static final int REQUEST_CODE_EDIT = 112;
+    public static int POSITION_MAX;
     private CoordinatorLayout rootLayout;
     private View vNotes;
     public List<Note> listNote;
+    private SwipeRefreshLayout mySwipeRefreshLayout;
     private RecyclerView gvListNote;
     private NoteAdapter noteAdapter;
     @Nullable
@@ -64,6 +71,8 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
         listNote = new ArrayList<>();
         gvListNote = vNotes.findViewById(R.id.vgListNote);
         rootLayout = vNotes.findViewById(R.id.rootLayout);
+        mySwipeRefreshLayout = vNotes.findViewById(R.id.mySwipeRefreshLayout);
+        mySwipeRefreshLayout.setOnRefreshListener(this);
 
         showAllNote();
 
@@ -72,15 +81,17 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(gvListNote);
     }
     public void showAllNote(){
+        POSITION_MAX = 0;
         listNote.clear();
         GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-        Call<Response> call = service.getAllNote();
+        Call<Response> call = service.getNote(MainActivity.USER_NAME);
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                Log.d("1234", response.toString());
-                for (Note note: response.body().getData().getNote()){
-                    Log.d("1234", note.toString());
+                for (Note note: response.body().getData().getNote()) {
+                    if (note.getNotePosition() > POSITION_MAX) {
+                        POSITION_MAX = note.getNotePosition();
+                    }
                     listNote.add(note);
                     noteAdapter = new NoteAdapter(getActivity(), R.layout.note_item_custom, listNote);
                     gvListNote.setAdapter(noteAdapter);
@@ -92,7 +103,7 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                Log.d("12345", t.getMessage());
+
             }
         });
     }
@@ -100,6 +111,46 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
     @Override
     public void onMove(RecyclerView.ViewHolder viewHolder, int oldPosition, int newPosition) {
         if (viewHolder instanceof NoteAdapter.MyViewHolder) {
+            GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            Note noteI = listNote.get(oldPosition);
+            Note noteJ = listNote.get(newPosition);
+            int tempPosition = noteI.getNotePosition();
+            noteI.setNotePosition(noteJ.getNotePosition());
+            noteJ.setNotePosition(tempPosition);
+
+            DateFormat dateFormat = new DateFormat();
+            try {
+                noteI.setNoteDate(dateFormat.Format(noteI.getNoteDate()));
+                noteJ.setNoteDate(dateFormat.Format(noteJ.getNoteDate()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Call<Response> callNoteI = service.updateNote(noteI);
+            callNoteI.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+
+                }
+            });
+            Call<Response> callNoteJ = service.updateNote(noteJ);
+            callNoteJ.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+
+                }
+            });
+
             if (oldPosition < newPosition) {
                 for (int i = oldPosition; i < newPosition; i++) {
                     Collections.swap(listNote, i, i + 1);
@@ -118,19 +169,19 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
         if (viewHolder instanceof NoteAdapter.MyViewHolder){
             String note_title = listNote.get(viewHolder.getAdapterPosition()).getNoteTitle();
             final Note note_delete = listNote.get(viewHolder.getAdapterPosition());
-            final int not_position = viewHolder.getAdapterPosition();
-            noteAdapter.removeNote(not_position);
+            final int note_position = viewHolder.getAdapterPosition();
+            noteAdapter.removeNote(note_position);
             //---remove note
             final GetDataService svDelete = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            final Call<Note> callDeleteNote = svDelete.deleteNote(note_delete);
-            callDeleteNote.enqueue(new Callback<Note>() {
+            final Call<Response> callDeleteNote = svDelete.deleteNote(note_delete);
+            callDeleteNote.enqueue(new Callback<Response>() {
                 @Override
-                public void onResponse(Call<Note> call, retrofit2.Response<Note> response) {
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                     Log.d("12345", response.message());
                 }
 
                 @Override
-                public void onFailure(Call<Note> call, Throwable t) {
+                public void onFailure(Call<Response> call, Throwable t) {
                     Log.d("123456", t.getMessage());
                 }
             });
@@ -139,17 +190,23 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    noteAdapter.restoreNote(note_delete, not_position);
+                    noteAdapter.restoreNote(note_delete, note_position);
                     final GetDataService svRestore = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                    Call<Note> callRestoreNote = svRestore.postNote(note_delete);
-                    callRestoreNote.enqueue(new Callback<Note>() {
+                    DateFormat dateFormat = new DateFormat();
+                    try {
+                        note_delete.setNoteDate(dateFormat.Format(note_delete.getNoteDate()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Call<Response> callRestoreNote = svRestore.postNote(note_delete);
+                    callRestoreNote.enqueue(new Callback<Response>() {
                         @Override
-                        public void onResponse(Call<Note> call, retrofit2.Response<Note> response) {
+                        public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                             Log.d("note_restore", response.message());
                         }
 
                         @Override
-                        public void onFailure(Call<Note> call, Throwable t) {
+                        public void onFailure(Call<Response> call, Throwable t) {
                             Log.d("note_restore", t.getMessage());
                         }
                     });
@@ -183,8 +240,16 @@ public class NoteFragment extends Fragment implements RecyclerItemTouchHelperLis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD || requestCode == REQUEST_CODE_EDIT){
             if(resultCode == Activity.RESULT_OK){
+                mySwipeRefreshLayout.setRefreshing(true);
                 showAllNote();
+                mySwipeRefreshLayout.setRefreshing(false);
             }
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        showAllNote();
+        mySwipeRefreshLayout.setRefreshing(false);
     }
 }

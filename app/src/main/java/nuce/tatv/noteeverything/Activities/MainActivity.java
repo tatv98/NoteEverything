@@ -1,6 +1,5 @@
 package nuce.tatv.noteeverything.Activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -23,7 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 import nuce.tatv.noteeverything.Fragments.ExpenseFragment;
 import nuce.tatv.noteeverything.Fragments.NoteFragment;
 import nuce.tatv.noteeverything.Fragments.SettingFragment;
-import nuce.tatv.noteeverything.Fragments.StatusFragment;
+import nuce.tatv.noteeverything.Fragments.WorkFragment;
 import nuce.tatv.noteeverything.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
         tvEmail = view.findViewById(R.id.tvEmail);
 
         Intent intent = getIntent();
-        tvUser.setText(intent.getStringExtra("user"));
-        tvEmail.setText(intent.getStringExtra("email"));
+        USER_NAME = intent.getStringExtra("user");
+        USER_EMAIL = intent.getStringExtra("email");
+        tvUser.setText(USER_NAME);
+        tvEmail.setText(USER_EMAIL);
 
         setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -87,14 +88,15 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction tranExpense = fragmentManager.beginTransaction();
                 ExpenseFragment expenseFragment = new ExpenseFragment();
                 tranExpense.replace(R.id.flContent, expenseFragment);
+                tranExpense.commit();
                 menuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 break;
-            case R.id.nav_status:
-                FragmentTransaction tranStatus = fragmentManager.beginTransaction();
-                StatusFragment statusFragment = new StatusFragment();
-                tranStatus.replace(R.id.flContent, statusFragment);
-                tranStatus.commit();
+            case R.id.nav_work:
+                FragmentTransaction tranWork = fragmentManager.beginTransaction();
+                WorkFragment workFragment = new WorkFragment();
+                tranWork.replace(R.id.flContent, workFragment);
+                tranWork.commit();
                 menuItem.setChecked(true);
                 mDrawer.closeDrawers();
                 break;
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_share:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Please install my application^^");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "NoteEverywhere..FB:fb.com/trinhta.nuce");
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, "Share to:"));
                 break;

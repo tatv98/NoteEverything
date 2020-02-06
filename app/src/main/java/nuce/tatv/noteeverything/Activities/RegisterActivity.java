@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nuce.tatv.noteeverything.Models.Response;
 import nuce.tatv.noteeverything.Models.User;
 import nuce.tatv.noteeverything.R;
 import nuce.tatv.noteeverything.Remotes.GetDataService;
@@ -24,7 +25,6 @@ import nuce.tatv.noteeverything.Remotes.RetrofitClientInstance;
 import nuce.tatv.noteeverything.Utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmail, edtUser, edtPass, edtConfirm;
@@ -76,42 +76,36 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Matcher m = p.matcher(email);
 
         if (email.equals("")) {
-            edtEmail.setError("Email must input!");
+            edtEmail.setError("Bạn phải nhập email!");
             edtEmail.requestFocus();
         } else if (username.equals("")) {
-            edtUser.setError("Username must input!");
+            edtUser.setError("Bạn phải nhập tài khoản!");
             edtUser.requestFocus();
         } else if (password.equals("")) {
-            edtPass.setError("Password must input!");
+            edtPass.setError("Bạn phải nhập mật khẩu!");
             edtPass.requestFocus();
         }else if (confirm.equals("")) {
-            edtConfirm.setError("Confirm password must input!");
+            edtConfirm.setError("Bạn phải xác nhận mật khẩut!");
             edtConfirm.requestFocus();
         }else if (!password.equals(confirm)){
-            edtConfirm.setError("Confirm password not match!");
+            edtConfirm.setError("Xác nhận mật khẩu không khớp!");
             edtConfirm.requestFocus();
         }else if (!m.find())
-            Toast.makeText(this, "Your Email Id is Invalid!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Email không đúng định dạng!", Toast.LENGTH_SHORT).show();
         else {
-            User user = new User();
-            user.setUserName(username);
-            user.setUserEmail(email);
-            user.setUserPass(password);
+            User user = new User(username,password, email);
             GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<User> call = service.postUser(user);
-            call.enqueue(new Callback<User>() {
+            Call<Response> call = service.postUser(user);
+            call.enqueue(new Callback<Response>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    Log.d("1234", response.toString());
-                    if (response.message().equals("OK")) Toast.makeText(getApplication(), "Signup success!", Toast.LENGTH_SHORT).show();
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                    Toast.makeText(getApplication(), "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    Log.d("1234", t.toString());
-                    Toast.makeText(getApplication(), "Signup false!", Toast.LENGTH_SHORT).show();
+                public void onFailure(Call<Response> call, Throwable t) {
+                    Toast.makeText(getApplication(), "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
                 }
-
             });
         }
     }

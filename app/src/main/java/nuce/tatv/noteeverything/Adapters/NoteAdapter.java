@@ -73,6 +73,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder>{
                 bundleNote.putString("note_content", note.getNoteContent());
                 bundleNote.putString("note_date", note.getNoteDate());
                 bundleNote.putString("user_name", note.getUserName());
+                bundleNote.putInt("note_position", note.getNotePosition());
                 intentNote.putExtras(bundleNote);
                 ((MainActivity)context).startActivityForResult(intentNote, NoteFragment.REQUEST_CODE_EDIT);
             }

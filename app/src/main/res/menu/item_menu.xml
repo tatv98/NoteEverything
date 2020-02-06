@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/itemAddExpense" android:title="Thêm chi tiêu" />
     <item android:id="@+id/itemAddNote" android:title="Thêm ghi chú" />
+    <item android:id="@+id/itemAddWork" android:title="Thêm công việc" />
+
 
 
 </menu>

@@ -17,14 +17,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import nuce.tatv.noteeverything.Fragments.NoteFragment;
 import nuce.tatv.noteeverything.Models.Note;
+import nuce.tatv.noteeverything.Models.Response;
 import nuce.tatv.noteeverything.R;
 import nuce.tatv.noteeverything.Remotes.GetDataService;
 import nuce.tatv.noteeverything.Remotes.RetrofitClientInstance;
 import nuce.tatv.noteeverything.Utils.DateFormat;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AddNoteActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvTitle, tvContent;
@@ -51,38 +52,41 @@ public class AddNoteActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnAddNote:
-                if(checkValidation()){
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                    DateFormat date = new DateFormat();
-                    try {
-                        note_date = date.Format(sdf.format(new Date()));
-                        Log.d("123456", note_date);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Note note = new Note(note_title, note_content, "trinhta", note_date);
-                    GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                    Call<Note> call = service.postNote(note);
-                    call.enqueue(new Callback<Note>() {
-                        @Override
-                        public void onResponse(Call<Note> call, Response<Note> response) {
-                            Log.d("1234", response.message());
-                            Toast.makeText(AddNoteActivity.this, "Thêm thành công!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent();
-                            setResult(Activity.RESULT_OK, intent);
-                            finish();
-                        }
-
-                        @Override
-                        public void onFailure(Call<Note> call, Throwable t) {
-                            Log.d("12345", t.getMessage());
-                        }
-                    });
-                }
+                addNote();
                 break;
             case R.id.btnExit:
                 finish();
                 break;
+        }
+    }
+    public void  addNote(){
+        if(checkValidation()){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            DateFormat date = new DateFormat();
+            try {
+                note_date = date.Format(sdf.format(new Date()));
+                Log.d("123456", note_date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Note note = new Note(note_title, note_content, MainActivity.USER_NAME, note_date, NoteFragment.POSITION_MAX + 1);
+            GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+            Call<Response> call = service.postNote(note);
+            call.enqueue(new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                    Log.d("1234", response.message());
+                    Toast.makeText(AddNoteActivity.this, "Thêm thành công!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+
+                }
+            });
         }
     }
 

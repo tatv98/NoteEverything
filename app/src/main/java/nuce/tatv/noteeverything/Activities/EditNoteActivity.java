@@ -14,20 +14,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.ParseException;
 
+import nuce.tatv.noteeverything.Fragments.NoteFragment;
 import nuce.tatv.noteeverything.Models.Note;
+import nuce.tatv.noteeverything.Models.Response;
 import nuce.tatv.noteeverything.R;
 import nuce.tatv.noteeverything.Remotes.GetDataService;
 import nuce.tatv.noteeverything.Remotes.RetrofitClientInstance;
 import nuce.tatv.noteeverything.Utils.DateFormat;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView tvTitle, tvContent;
     private Button btnEditNote, btnExit;
     private String note_date, note_title, note_content, user_name;
-    private Integer note_id;
+    private Integer note_id, note_position;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         Bundle bundleNote = intentGetNote.getExtras();
         if (bundleNote != null){
             note_id = bundleNote.getInt("note_id");
+            note_position = bundleNote.getInt("note_position");
             note_title = bundleNote.getString("note_title");
             note_content = bundleNote.getString("note_content");
             note_date = bundleNote.getString("note_date");
@@ -69,12 +71,12 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Note note = new Note(note_id,tvTitle.getText().toString(), tvContent.getText().toString(), user_name, note_date);
+                    Note note = new Note(note_id,tvTitle.getText().toString(), tvContent.getText().toString(), user_name, note_date, note_position);
                     GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-                    Call<Note> call = service.updateNote(note);
-                    call.enqueue(new Callback<Note>() {
+                    Call<Response> call = service.updateNote(note);
+                    call.enqueue(new Callback<Response>() {
                         @Override
-                        public void onResponse(Call<Note> call, Response<Note> response) {
+                        public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                             Log.d("edit_note", response.message());
                             Toast.makeText(EditNoteActivity.this, "Sửa thành công!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent();
@@ -83,8 +85,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                         }
 
                         @Override
-                        public void onFailure(Call<Note> call, Throwable t) {
-                            Log.d("edit_note", t.getMessage());
+                        public void onFailure(Call<Response> call, Throwable t) {
+
                         }
                     });
                 }

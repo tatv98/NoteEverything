@@ -23,6 +23,11 @@
         <activity android:name=".Activities.ForgotPasswordActivity"/>
         <activity android:name=".Activities.AddNoteActivity"/>
         <activity android:name=".Activities.EditNoteActivity"/>
+        <activity android:name=".Activities.AddExpenseActivity"/>
+        <activity android:name=".Activities.EditExpenseActivity"/>
+        <activity android:name=".Activities.ReportExpenseActivity"/>
+        <activity android:name=".Activities.AddWorkActivity"/>
+        <activity android:name=".Activities.EditWorkActivity"/>
     </application>
 
 </manifest>

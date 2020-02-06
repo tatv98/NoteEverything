@@ -36,15 +36,6 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
         init();
-
-        sharedPreferences = getSharedPreferences("dataLogin", MODE_PRIVATE);
-        //get data to sharedFreferences
-        edtUser.setText(sharedPreferences.getString("user", ""));
-        edtPass.setText(sharedPreferences.getString("pass", ""));
-        cbRemember.setChecked(sharedPreferences.getBoolean("checked", false));
-
-        setListeners();
-
     }
 
     public void init() {
@@ -54,6 +45,12 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         cbRemember = findViewById(R.id.cbRemember);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvRegister = findViewById(R.id.tvRegister);
+
+        sharedPreferences = getSharedPreferences("datalogin", MODE_PRIVATE);
+        edtUser.setText(sharedPreferences.getString("user",""));
+        edtPass.setText(sharedPreferences.getString("pass", ""));
+        cbRemember.setChecked(sharedPreferences.getBoolean("checked", false));
+        setListeners();
     }
     private void setListeners() {
         tvForgotPassword.setOnClickListener(this);
@@ -86,10 +83,10 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         final String username = edtUser.getText().toString();
         final String password = edtPass.getText().toString();
         if (username.equals("")) {
-            edtUser.setError("Username must input");
+            edtUser.setError("Bạn phải nhập tài khoản!");
             edtUser.requestFocus();
         } else if (password.equals("")) {
-            edtPass.setError("Password must input");
+            edtPass.setError("Bạn phải nhập mật khẩu!");
             edtPass.requestFocus();
         } else {
             GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -124,7 +121,7 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                         }
                     }
                     if(!check){
-                        Toast.makeText(getApplication(), "Username or Password not match!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplication(), "Tài khoản hoặc mật khẩu không đúng!", Toast.LENGTH_SHORT).show();
                     }
                 }
 

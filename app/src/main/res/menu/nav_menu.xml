@@ -4,7 +4,7 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_expense" android:title="Expense" android:icon="@drawable/ic_expense"/>
-        <item android:id="@+id/nav_status" android:title="Status" android:icon="@drawable/ic_status"/>
+        <item android:id="@+id/nav_work" android:title="Work" android:icon="@drawable/ic_work"/>
         <item android:id="@+id/nav_note" android:title="Note" android:icon="@drawable/ic_note"/>
         <item android:id="@+id/nav_setting" android:title="Setting" android:icon="@drawable/ic_setting"/>
     </group>

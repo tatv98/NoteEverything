@@ -101,7 +101,7 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
         android:text="Register"
-        />
+        android:foreground="?android:attr/selectableItemBackground"/>
     <TextView
         android:id="@+id/tvBackToLogin"
         android:layout_width="match_parent"
